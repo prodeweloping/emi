@@ -1,1 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EMI Calculator | Pro Toolss</title>
 
+    <!-- ===== FAVICON ===== -->
+    <link rel="icon" href="https://i.ibb.co/FkJPMZ8r/Chat-GPT-Image-Jun-18-2026-07-58-22-AM.png" type="image/png" />
+
+    <!-- ===== FONT AWESOME (online icons) ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- ============================================================
+    STYLES  (Dark mode completely removed)
+    ============================================================ -->
+    <style>
+        /* ----- CSS Variables (Light only) ----- */
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-input: #f8fafc;
+            --bg-hover: #eef2ff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-inverse: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+            --shadow-hover: 0 24px 72px rgba(79, 70, 229, 0.12);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #818cf8;
+            --primary-gradient: linear-gradient(135deg, #4f46e5, #7c3aed);
+            --success: #10b981;
+            --danger: #ef4444;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --max-width: 720px;
+            --input-height: 52px;
+            --label-weight: 600;
+            --navbar-bg: rgba(255, 255, 255, 0.98);
+            --navbar-text: #1e293b;
+            --footer-bg: #0b1426;
+            --footer-text: #94a3b8;
+            --footer-link: #facc15;
+        }
+
+        /* ----- Reset & Base ----- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-top: 75px;
+            transition: background var(--transition), color var(--transition);
+            line-height: 1.6;
+        }
+
+        /* ============================================================
+           NAVBAR
+           ============================================================ */
+        .new-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background var(--transition);
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+        }
+        .logo-blue {
+            color: #007BFF;
+        }
+        .logo-orange {
+            color: #FF6F00;
+        }
+
+        .home-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            transition: opacity var(--transition);
+        }
+        .home-btn:hover {
+            opacity: 0.7;
+        }
+        .home-btn .lines {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .home-btn .lines span {
+            width: 24px;
+            height: 3px;
+            background: var(--navbar-text);
+            border-radius: 10px;
+            transition: background var(--transition);
+        }
+        .home-btn .label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--navbar-text);
+            margin-top: 3px;
+            text-transform: uppercase;
+            transition: color var(--transition);
+        }
+
+        /* ============================================================
+           MAIN CONTENT
+           ============================================================ */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 20px 10px 20px;
+        }
+
+        /* ----- Container (EMI Card) ----- */
+        .container {
+            max-width: var(--max-width);
+            width: 100%;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px 28px 40px;
+            transition: background var(--transition), box-shadow var(--transition);
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        /* ----- Header inside card ----- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        /* ----- Form ----- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 20px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: var(--label-weight);
+            color: var(--text-secondary);
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color var(--transition);
+        }
+
+        .form-group label .req {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            height: var(--input-height);
+            padding: 0 16px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: var(--font);
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+            outline: none;
+            appearance: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+
+        .form-group input.error,
+        .form-group select.error {
+            border-color: var(--danger);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.10);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        .form-group .error-msg {
+            font-size: 12px;
+            color: var(--danger);
+            min-height: 18px;
+            margin-top: 2px;
+            font-weight: 500;
+            transition: opacity var(--transition);
+            opacity: 0;
+        }
+
+        .form-group .error-msg.visible {
+            opacity: 1;
+        }
+
+        /* ----- Buttons ----- */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 28px;
+            height: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: var(--font);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition);
+            flex: 1;
+            min-width: 120px;
+            letter-spacing: 0.3px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(79, 70, 229, 0.30);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(79, 70, 229, 0.35);
+        }
+        .btn-primary:active {
+            transform: translateY(0px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-light);
+            color: var(--text-primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ----- Results ----- */
+        .results {
+            margin-top: 28px;
+            padding-top: 28px;
+            border-top: 2px solid var(--border-color);
+            transition: opacity var(--transition), transform var(--transition);
+            opacity: 0;
+            transform: translateY(16px);
+            pointer-events: none;
+            display: none;
+        }
+
+        .results.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            display: block;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .result-card {
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .result-card .label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .result-card .value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            word-break: break-word;
+            transition: color var(--transition);
+        }
+
+        .result-card .value.emi {
+            color: var(--primary);
+        }
+        .result-card .value.total-interest {
+            color: var(--danger);
+        }
+        .result-card .value.total-payment {
+            color: var(--success);
+        }
+        .result-card .value.loan-amount {
+            color: var(--text-secondary);
+        }
+
+        .result-card.highlight {
+            background: var(--primary-gradient);
+            border-color: transparent;
+        }
+        .result-card.highlight .label {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .result-card.highlight .value {
+            color: #fff;
+        }
+
+        /* ----- Action Buttons (Copy, PDF, Print, Share) ----- */
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 16px;
+            height: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: var(--font);
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition);
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-light);
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .action-btn .icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .action-btn.copied {
+            background: var(--success);
+            color: #fff;
+            border-color: var(--success);
+        }
+
+        /* ----- Toast ----- */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 12px 28px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .toast .toast-icon {
+            font-size: 20px;
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        footer {
+            background: var(--footer-bg);
+            color: white;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background var(--transition);
+            margin-top: 10px;
+            flex-shrink: 0;
+        }
+
+        .design-footer {
+            color: var(--footer-text);
+            transition: color var(--transition);
+        }
+
+        .highlight {
+            color: var(--footer-link);
+            font-weight: 700;
+            text-decoration: underline;
+            transition: color var(--transition);
+        }
+        .highlight:hover {
+            opacity: 0.8;
+        }
+
+        /* ============================================================
+           PRINT STYLES
+           ============================================================ */
+        @media print {
+            body {
+                background: #fff !important;
+                padding: 12px !important;
+                display: block !important;
+                padding-top: 20px !important;
+            }
+            .new-nav,
+            footer,
+            .btn-group,
+            .action-bar {
+                display: none !important;
+            }
+            .container {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                padding: 20px !important;
+                max-width: 100% !important;
+                border-radius: 0 !important;
+            }
+            .results {
+                opacity: 1 !important;
+                transform: none !important;
+                pointer-events: auto !important;
+                display: block !important;
+                border-top-color: #ccc !important;
+            }
+            .result-card {
+                background: #f8fafc !important;
+                border-color: #ddd !important;
+                break-inside: avoid;
+            }
+            .result-card.highlight {
+                background: #4f46e5 !important;
+            }
+            .result-card.highlight .value {
+                color: #fff !important;
+            }
+            .result-card.highlight .label {
+                color: rgba(255, 255, 255, 0.75) !important;
+            }
+            .form-group input,
+            .form-group select {
+                background: #f8fafc !important;
+                border-color: #ddd !important;
+            }
+            .header h1 {
+                -webkit-text-fill-color: #4f46e5 !important;
+            }
+            .logo-icon {
+                background: #4f46e5 !important;
+            }
+            .error-msg {
+                display: none !important;
+            }
+            .toast {
+                display: none !important;
+            }
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 768px) {
+            footer {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 60px;
+            }
+            .toast {
+                bottom: 80px;
+            }
+            body {
+                padding-bottom: 70px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding-top: 68px;
+            }
+            .new-nav {
+                padding: 10px 16px;
+            }
+            .logo {
+                font-size: 24px;
+            }
+            .container {
+                padding: 20px 16px 28px;
+                border-radius: 16px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .form-group.full-width {
+                grid-column: 1;
+            }
+            .results-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .result-card .value {
+                font-size: 18px;
+            }
+            .result-card {
+                padding: 12px 14px;
+            }
+            .btn {
+                height: 44px;
+                font-size: 14px;
+                padding: 0 16px;
+                min-width: 80px;
+            }
+            .action-btn {
+                height: 36px;
+                font-size: 12px;
+                padding: 0 10px;
+                min-width: 60px;
+            }
+            .action-bar {
+                gap: 6px;
+            }
+            .btn-group {
+                gap: 8px;
+            }
+            .toast {
+                font-size: 13px;
+                padding: 10px 20px;
+                bottom: 76px;
+                max-width: 95%;
+            }
+            footer {
+                height: 54px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+        }
+
+        /* ----- Accessibility: focus-visible ----- */
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* ----- Utilities ----- */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+    NAVBAR
+    ============================================================ -->
+    <nav class="new-nav" role="navigation" aria-label="Main navigation">
+        <div class="logo">
+            <span class="logo-blue">Pro</span>
+            <span class="logo-orange">Toolss</span>
+        </div>
+
+        <button id="homeBtn" class="home-btn" aria-label="Go to Pro Toolss homepage">
+            <div class="lines">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span class="label">Home</span>
+        </button>
+    </nav>
+
+    <!-- ============================================================
+    MAIN CONTENT  →  EMI CALCULATOR
+    ============================================================ -->
+    <main>
+        <div class="container" role="main" aria-label="EMI Calculator">
+
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title-group">
+                    <div class="logo-icon" aria-hidden="true">₹</div>
+                    <h1>EMI Calculator</h1>
+                </div>
+            </header>
+
+            <!-- Form -->
+            <form id="emiForm" novalidate aria-label="EMI calculator form">
+                <div class="form-grid">
+
+                    <!-- Loan Amount -->
+                    <div class="form-group full-width">
+                        <label for="loanAmount">
+                            Loan Amount <span class="req" aria-hidden="true">*</span>
+                        </label>
+                        <input
+                        type="text"
+                        id="loanAmount"
+                        placeholder="e.g. 5,00,000"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        aria-describedby="loanAmountError"
+                        />
+                        <div class="error-msg" id="loanAmountError" role="alert"></div>
+                    </div>
+
+                    <!-- Interest Rate -->
+                    <div class="form-group">
+                        <label for="interestRate">
+                            Annual Interest Rate (%) <span class="req" aria-hidden="true">*</span>
+                        </label>
+                        <input
+                        type="text"
+                        id="interestRate"
+                        placeholder="e.g. 8.5"
+                        inputmode="decimal"
+                        autocomplete="off"
+                        aria-describedby="interestRateError"
+                        />
+                        <div class="error-msg" id="interestRateError" role="alert"></div>
+                    </div>
+
+                    <!-- Tenure -->
+                    <div class="form-group">
+                        <label for="tenure">
+                            Loan Tenure <span class="req" aria-hidden="true">*</span>
+                        </label>
+                        <input
+                        type="text"
+                        id="tenure"
+                        placeholder="e.g. 5"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        aria-describedby="tenureError"
+                        />
+                        <div class="error-msg" id="tenureError" role="alert"></div>
+                    </div>
+
+                    <!-- Tenure Type -->
+                    <div class="form-group">
+                        <label for="tenureType">Tenure Type</label>
+                        <select id="tenureType" aria-label="Select tenure type">
+                            <option value="months">Months</option>
+                            <option value="years" selected>Years</option>
+                        </select>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="form-group full-width">
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary" id="calcBtn">
+                                <span aria-hidden="true"><i class="fas fa-calculator"></i></span> Calculate EMI
+                            </button>
+                            <button type="reset" class="btn btn-secondary" id="resetBtn">
+                                <span aria-hidden="true"><i class="fas fa-rotate-left"></i></span> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Results -->
+            <section class="results" id="results" aria-label="EMI calculation results">
+                <div class="results-grid">
+                    <div class="result-card highlight">
+                        <div class="label">Monthly EMI</div>
+                        <div class="value emi" id="emiValue">—</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="label">Total Interest</div>
+                        <div class="value total-interest" id="totalInterest">—</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="label">Total Payment</div>
+                        <div class="value total-payment" id="totalPayment">—</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="label">Loan Amount</div>
+                        <div class="value loan-amount" id="loanAmountDisplay">—</div>
+                    </div>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <button class="action-btn" id="copyBtn" title="Copy results to clipboard">
+                        <span class="icon" aria-hidden="true"><i class="fas fa-copy"></i></span> Copy
+                    </button>
+                    <button class="action-btn" id="pdfBtn" title="Download results as PDF">
+                        <span class="icon" aria-hidden="true"><i class="fas fa-file-pdf"></i></span> PDF
+                    </button>
+                    <button class="action-btn" id="printBtn" title="Print results">
+                        <span class="icon" aria-hidden="true"><i class="fas fa-print"></i></span> Print
+                    </button>
+                    <button class="action-btn" id="shareBtn" title="Share results">
+                        <span class="icon" aria-hidden="true"><i class="fas fa-share-alt"></i></span> Share
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer>
+        <div class="design-footer">
+            Design by
+            <a href="https://www.protoolss.online"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="highlight">
+            Pro Toolss
+        </a>
+    </div>
+</footer>
+
+<!-- ============================================================
+TOAST
+============================================================ -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-icon" aria-hidden="true"><i class="fas fa-check-circle"></i></span>
+    <span id="toastMessage">Copied!</span>
+</div>
+
+<!-- ============================================================
+JAVASCRIPT  (Dark mode removed)
+============================================================ -->
+<script>
+    (function() {
+        'use strict';
+
+        // ---- DOM refs ----
+        const form = document.getElementById('emiForm');
+        const loanInput = document.getElementById('loanAmount');
+        const rateInput = document.getElementById('interestRate');
+        const tenureInput = document.getElementById('tenure');
+        const tenureType = document.getElementById('tenureType');
+        const calcBtn = document.getElementById('calcBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultsSection = document.getElementById('results');
+        const emiValue = document.getElementById('emiValue');
+        const totalInterest = document.getElementById('totalInterest');
+        const totalPayment = document.getElementById('totalPayment');
+        const loanAmountDisplay = document.getElementById('loanAmountDisplay');
+        const copyBtn = document.getElementById('copyBtn');
+        const pdfBtn = document.getElementById('pdfBtn');
+        const printBtn = document.getElementById('printBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMessage');
+        const homeBtn = document.getElementById('homeBtn');
+
+        // ---- Error message elements ----
+        const loanError = document.getElementById('loanAmountError');
+        const rateError = document.getElementById('interestRateError');
+        const tenureError = document.getElementById('tenureError');
+
+        // ---- State ----
+        let lastResult = null;
+
+        // ---- Helpers: formatting ----
+        function formatIndianCurrency(amount) {
+            if (amount === undefined || amount === null || isNaN(amount)) return '₹—';
+            const rounded = Math.round(amount);
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 0,
+            }).format(rounded);
+        }
+
+        function formatIndianCurrencyWithDecimal(amount) {
+            if (amount === undefined || amount === null || isNaN(amount)) return '₹—';
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            }).format(amount);
+        }
+
+        function parseIndianNumber(str) {
+            if (!str) return NaN;
+            const cleaned = String(str).replace(/,/g, '').trim();
+            return parseFloat(cleaned);
+        }
+
+        function formatIndianInput(value) {
+            if (!value) return '';
+            const raw = String(value).replace(/,/g, '').replace(/[^\d.]/g, '');
+            if (!raw) return '';
+            const num = parseFloat(raw);
+            if (isNaN(num)) return raw;
+            const parts = raw.split('.');
+            const intPart = parts[0];
+            const decPart = parts.length > 1 ? '.' + parts[1] : '';
+            const formattedInt = new Intl.NumberFormat('en-IN').format(parseInt(intPart || '0'));
+            return formattedInt + decPart;
+        }
+
+        function formatLoanAmountInput() {
+            const raw = loanInput.value;
+            const formatted = formatIndianInput(raw);
+            if (formatted !== raw) {
+                loanInput.value = formatted;
+            }
+        }
+
+        function formatRateInput() {
+            let val = rateInput.value.replace(/[^\d.]/g, '');
+            const parts = val.split('.');
+            if (parts.length > 2) {
+                val = parts[0] + '.' + parts.slice(1).join('');
+            }
+            rateInput.value = val;
+        }
+
+        function formatTenureInput() {
+            const raw = tenureInput.value.replace(/[^\d]/g, '');
+            tenureInput.value = raw;
+        }
+
+        // ---- Validation ----
+        function validateForm() {
+            let isValid = true;
+
+            const loanRaw = loanInput.value;
+            const loanNum = parseIndianNumber(loanRaw);
+            if (!loanRaw || loanRaw.trim() === '' || isNaN(loanNum) || loanNum <= 0) {
+                loanInput.classList.add('error');
+                loanError.textContent = 'Please enter a valid loan amount greater than 0.';
+                loanError.classList.add('visible');
+                isValid = false;
+            } else {
+                loanInput.classList.remove('error');
+                loanError.textContent = '';
+                loanError.classList.remove('visible');
+            }
+
+            const rateRaw = rateInput.value;
+            const rateNum = parseFloat(rateRaw);
+            if (rateRaw.trim() === '' || isNaN(rateNum) || rateNum < 0) {
+                rateInput.classList.add('error');
+                rateError.textContent = 'Interest rate cannot be negative.';
+                rateError.classList.add('visible');
+                isValid = false;
+            } else {
+                rateInput.classList.remove('error');
+                rateError.textContent = '';
+                rateError.classList.remove('visible');
+            }
+
+            const tenureRaw = tenureInput.value;
+            const tenureNum = parseInt(tenureRaw, 10);
+            if (tenureRaw.trim() === '' || isNaN(tenureNum) || tenureNum <= 0) {
+                tenureInput.classList.add('error');
+                tenureError.textContent = 'Tenure must be greater than 0.';
+                tenureError.classList.add('visible');
+                isValid = false;
+            } else {
+                tenureInput.classList.remove('error');
+                tenureError.textContent = '';
+                tenureError.classList.remove('visible');
+            }
+
+            return isValid;
+        }
+
+        // ---- Calculate EMI ----
+        function calculateEMI() {
+            if (!validateForm()) {
+                resultsSection.classList.remove('visible');
+                return null;
+            }
+
+            const P = parseIndianNumber(loanInput.value);
+            const annualRate = parseFloat(rateInput.value);
+            const tenureVal = parseInt(tenureInput.value, 10);
+            const isYears = tenureType.value === 'years';
+
+            if (isNaN(P) || P <= 0 || isNaN(annualRate) || annualRate < 0 || isNaN(tenureVal) || tenureVal <= 0) {
+                return null;
+            }
+
+            const months = isYears ? tenureVal * 12 : tenureVal;
+            const monthlyRate = annualRate / 12 / 100;
+
+            let emi, totalInterest, totalPayment;
+
+            if (monthlyRate === 0) {
+                emi = P / months;
+                totalInterest = 0;
+                totalPayment = P;
+            } else {
+                const factor = Math.pow(1 + monthlyRate, months);
+                emi = P * monthlyRate * factor / (factor - 1);
+                totalPayment = emi * months;
+                totalInterest = totalPayment - P;
+            }
+
+            const result = {
+                emi: emi,
+                totalInterest: totalInterest,
+                totalPayment: totalPayment,
+                principal: P,
+                monthlyRate: monthlyRate,
+                months: months,
+            };
+
+            lastResult = result;
+            displayResults(result);
+            return result;
+        }
+
+        // ---- Display Results ----
+        function displayResults(result) {
+            emiValue.textContent = formatIndianCurrencyWithDecimal(result.emi);
+            totalInterest.textContent = formatIndianCurrency(result.totalInterest);
+            totalPayment.textContent = formatIndianCurrency(result.totalPayment);
+            loanAmountDisplay.textContent = formatIndianCurrency(result.principal);
+
+            resultsSection.classList.add('visible');
+            requestAnimationFrame(() => {
+                resultsSection.style.opacity = '1';
+            });
+        }
+
+        // ---- Reset ----
+        function resetForm() {
+            loanInput.value = '';
+            rateInput.value = '';
+            tenureInput.value = '';
+            tenureType.value = 'years';
+            resultsSection.classList.remove('visible');
+            lastResult = null;
+
+            document.querySelectorAll('.error-msg').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('visible');
+            });
+            document.querySelectorAll('.error').forEach(el => {
+                el.classList.remove('error');
+            });
+
+            loanInput.focus();
+        }
+
+        // ---- Toast ----
+        let toastTimeout = null;
+
+        function showToast(message, icon = 'fa-check-circle') {
+            toastMsg.textContent = message;
+            const iconEl = toast.querySelector('.toast-icon i');
+            if (iconEl) {
+                iconEl.className = 'fas ' + icon;
+            }
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2800);
+        }
+
+        // ---- Copy Results ----
+        function copyResults() {
+            if (!lastResult) {
+                showToast('Calculate EMI first!', 'fa-exclamation-triangle');
+                return;
+            }
+            const text =
+                `📊 EMI Summary\n` +
+                `─────────────────\n` +
+                `Loan Amount:   ${formatIndianCurrency(lastResult.principal)}\n` +
+                `Monthly EMI:   ${formatIndianCurrencyWithDecimal(lastResult.emi)}\n` +
+                `Total Interest: ${formatIndianCurrency(lastResult.totalInterest)}\n` +
+                `Total Payment: ${formatIndianCurrency(lastResult.totalPayment)}\n` +
+                `Tenure:        ${lastResult.months} months\n` +
+                `Rate:          ${parseFloat(rateInput.value)}% p.a.`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Results copied to clipboard!', 'fa-copy');
+                copyBtn.classList.add('copied');
+                setTimeout(() => copyBtn.classList.remove('copied'), 2000);
+            }).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Results copied!', 'fa-copy');
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => copyBtn.classList.remove('copied'), 2000);
+                } catch (_) {
+                    showToast('Could not copy. Please copy manually.', 'fa-exclamation-triangle');
+                }
+                document.body.removeChild(ta);
+            });
+        }
+
+        // ---- PDF (via Print → Save as PDF) ----
+        function downloadPDF() {
+            if (!lastResult) {
+                showToast('Calculate EMI first!', 'fa-exclamation-triangle');
+                return;
+            }
+            showToast('Choose "Save as PDF" in the print dialog.', 'fa-print');
+            setTimeout(() => window.print(), 400);
+        }
+
+        // ---- Print ----
+        function printResults() {
+            if (!lastResult) {
+                showToast('Calculate EMI first!', 'fa-exclamation-triangle');
+                return;
+            }
+            window.print();
+        }
+
+        // ---- Share (Web Share API) ----
+        function shareResults() {
+            if (!lastResult) {
+                showToast('Calculate EMI first!', 'fa-exclamation-triangle');
+                return;
+            }
+            const text =
+                `📊 EMI Summary\n` +
+                `Loan: ${formatIndianCurrency(lastResult.principal)}\n` +
+                `EMI:  ${formatIndianCurrencyWithDecimal(lastResult.emi)}\n` +
+                `Interest: ${formatIndianCurrency(lastResult.totalInterest)}\n` +
+                `Total: ${formatIndianCurrency(lastResult.totalPayment)}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'EMI Calculator Results',
+                    text: text,
+                }).catch((err) => {
+                    if (err.name !== 'AbortError') {
+                        showToast('Share cancelled or failed.', 'fa-exclamation-triangle');
+                    }
+                });
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('Results copied! Share them anywhere.', 'fa-copy');
+                }).catch(() => {
+                    showToast('Web Share API not supported. Copy manually.', 'fa-exclamation-triangle');
+                });
+            }
+        }
+
+        // ---- Home button ----
+        homeBtn.addEventListener('click', function() {
+            window.location.href = 'https://www.protoolss.online';
+        });
+
+        // ---- Event: live formatting ----
+        loanInput.addEventListener('input', formatLoanAmountInput);
+        loanInput.addEventListener('blur', formatLoanAmountInput);
+        rateInput.addEventListener('input', formatRateInput);
+        tenureInput.addEventListener('input', formatTenureInput);
+
+        // ---- Event: form submit ----
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateEMI();
+        });
+
+        // ---- Event: reset ----
+        resetBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            resetForm();
+            loanInput.focus();
+        });
+
+        // ---- Event: keydown (Enter) ----
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.closest('form')) {
+                e.preventDefault();
+                calculateEMI();
+            }
+        });
+
+        // ---- Event: action buttons ----
+        copyBtn.addEventListener('click', copyResults);
+        pdfBtn.addEventListener('click', downloadPDF);
+        printBtn.addEventListener('click', printResults);
+        shareBtn.addEventListener('click', shareResults);
+
+        // ---- Auto-focus loan input ----
+        loanInput.focus();
+
+        // ---- Initial state ----
+        resultsSection.classList.remove('visible');
+
+        // ---- Announce results update ----
+        const resultsObserver = new MutationObserver(() => {
+            if (resultsSection.classList.contains('visible')) {
+                const announce = document.createElement('div');
+                announce.setAttribute('aria-live', 'polite');
+                announce.className = 'sr-only';
+                announce.textContent = 'EMI calculation results updated.';
+                document.body.appendChild(announce);
+                setTimeout(() => document.body.removeChild(announce), 1000);
+            }
+        });
+        resultsObserver.observe(resultsSection, { attributes: true, attributeFilter: ['class'] });
+
+        console.log('✅ EMI Calculator initialized successfully.');
+
+    })();
+</script>
+
+</body>
+</html>
